@@ -1,0 +1,13 @@
+# ОС
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Редактори
+.vscode/
+.idea/
+*.swp
+
+# Локальні чернетки
+*.local.*
+tmp/
