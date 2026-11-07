@@ -1,6 +1,6 @@
-# Marymar — лендінг авторських техкарток тортів
+# Marymar — лендінг авторських техкарт тортів
 
-Одна сторінка про техкартки тортів кондитера Марії ([@marymar.cake](https://www.instagram.com/marymar.cake/)).
+Одна сторінка про техкарти тортів кондитера Марії ([@marymar.cake](https://www.instagram.com/marymar.cake/)).
 Звичайні HTML, CSS і JavaScript, без збірки та залежностей.
 
 ## Як подивитися локально
