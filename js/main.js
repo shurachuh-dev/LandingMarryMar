@@ -138,8 +138,182 @@
     });
   }
 
+  /* ---------- Покупка (демо): вікно оплати ---------- */
+  function initCheckout() {
+    var dlg = document.getElementById('checkout');
+    if (!dlg || typeof dlg.showModal !== 'function') return;
+
+    var form = document.getElementById('co-form');
+    var success = dlg.querySelector('.co-success');
+    var item = dlg.querySelector('.co-item');
+    var itemImg = dlg.querySelector('.co-item-img');
+    var itemName = dlg.querySelector('.co-item-name');
+    var itemDesc = dlg.querySelector('.co-item-desc');
+    var itemPrice = dlg.querySelector('.co-item-price');
+    var extra = dlg.querySelector('.co-extra');
+    var extraList = dlg.querySelector('.co-extra-list');
+    var email = document.getElementById('co-email');
+    var emailErr = document.getElementById('co-email-err');
+    var agree = document.getElementById('co-agree');
+    var agreeErr = document.getElementById('co-agree-err');
+    var totalOut = document.getElementById('co-total');
+    var submit = document.getElementById('co-submit');
+    var opener = null;
+    var current = null;
+
+    function price(text) { return parseInt(String(text).replace(/\D/g, ''), 10) || 0; }
+    function money(n) { return n.toLocaleString('uk-UA') + ' грн'; }
+    function plural(n) {
+      var m10 = n % 10, m100 = n % 100;
+      if (m10 === 1 && m100 !== 11) return n + ' техкарту';
+      if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return n + ' техкарти';
+      return n + ' техкарт';
+    }
+
+    // Дані беремо з картки на сторінці: назва, фото, ціна.
+    function readProduct(btn) {
+      var card = btn.closest('.product, .pack');
+      var img = card.querySelector('img');
+      return {
+        id: btn.getAttribute('data-buy'),
+        isPack: card.classList.contains('pack'),
+        name: card.querySelector('h3').textContent.trim(),
+        desc: card.classList.contains('pack') ? card.querySelector('p').textContent.trim() : 'Техкарта у PDF',
+        img: img ? (img.currentSrc || img.src) : '',
+        price: price(card.querySelector('.price').textContent)
+      };
+    }
+    var flavors = Array.prototype.map.call(document.querySelectorAll('.product .cart-btn'), readProduct);
+
+    function selectedExtras() {
+      return Array.prototype.filter.call(extraList.querySelectorAll('input:checked'), function () { return true; })
+        .map(function (input) {
+          return flavors.filter(function (f) { return f.id === input.value; })[0];
+        });
+    }
+
+    function updateTotal() {
+      var sum = current.price;
+      selectedExtras().forEach(function (f) { sum += f.price; });
+      totalOut.textContent = money(sum);
+      submit.textContent = 'Оплатити ' + money(sum);
+    }
+
+    function showError(input, err, show) {
+      err.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+    }
+
+    function open(btn) {
+      opener = btn;
+      current = readProduct(btn);
+
+      form.reset();
+      form.hidden = false;
+      success.hidden = true;
+      showError(email, emailErr, false);
+      showError(agree, agreeErr, false);
+      submit.disabled = false;
+
+      itemName.textContent = current.name;
+      itemDesc.textContent = current.desc;
+      itemPrice.textContent = money(current.price);
+      itemImg.hidden = !current.img;
+      item.classList.toggle('no-img', !current.img);
+      if (current.img) { itemImg.src = current.img; itemImg.alt = ''; }
+
+      // Інші смаки можна додати лише до окремої техкарти, не до пакетів.
+      extraList.innerHTML = '';
+      extra.hidden = current.isPack;
+      if (!current.isPack) {
+        flavors.forEach(function (f) {
+          if (f.id === current.id) return;
+          var label = document.createElement('label');
+          var input = document.createElement('input');
+          input.type = 'checkbox';
+          input.value = f.id;
+          var name = document.createElement('span');
+          name.textContent = f.name;
+          var p = document.createElement('span');
+          p.className = 'co-x-price';
+          p.textContent = '+' + money(f.price);
+          label.appendChild(input); label.appendChild(name); label.appendChild(p);
+          extraList.appendChild(label);
+        });
+      }
+
+      updateTotal();
+      document.documentElement.classList.add('modal-open');
+      dlg.showModal();
+      email.focus();
+    }
+
+    function unlock() { document.documentElement.classList.remove('modal-open'); }
+    function close() {
+      unlock();
+      if (dlg.open) dlg.close();
+    }
+
+    dlg.addEventListener('cancel', unlock); // Esc
+    dlg.addEventListener('close', function () {
+      unlock();
+      if (opener) opener.focus();
+    });
+
+    // Клік по затемненню (поза вікном) закриває його.
+    dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });
+    dlg.querySelector('.co-close').addEventListener('click', close);
+    dlg.querySelector('.co-done').addEventListener('click', close);
+    extraList.addEventListener('change', updateTotal);
+
+    email.addEventListener('input', function () {
+      if (email.getAttribute('aria-invalid') === 'true' && isEmail(email.value)) showError(email, emailErr, false);
+    });
+    agree.addEventListener('change', function () { if (agree.checked) showError(agree, agreeErr, false); });
+
+    function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim()); }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var okEmail = isEmail(email.value);
+      var okAgree = agree.checked;
+      showError(email, emailErr, !okEmail);
+      showError(agree, agreeErr, !okAgree);
+      if (!okEmail) { email.focus(); return; }
+      if (!okAgree) { agree.focus(); return; }
+
+      // Демо: імітуємо обробку платежу. Тут пізніше буде виклик платіжного сервісу.
+      var items = [current].concat(selectedExtras());
+      var mail = email.value.trim();
+      submit.disabled = true;
+      submit.textContent = 'Обробка оплати…';
+
+      setTimeout(function () {
+        var count = current.isPack ? null : items.length;
+        var text = success.querySelector('.co-success-text');
+        text.textContent = (count ? 'Ми надіслали ' + plural(count) : 'Ми надіслали ваш набір') + ' на ' + mail + ' (демо).';
+        var list = success.querySelector('.co-success-list');
+        list.innerHTML = '';
+        items.forEach(function (it) {
+          var li = document.createElement('li');
+          li.textContent = it.name;
+          list.appendChild(li);
+        });
+        form.hidden = true;
+        success.hidden = false;
+        dlg.scrollTop = 0;
+        success.querySelector('.co-title').focus();
+      }, 1200);
+    });
+
+    document.querySelectorAll('[data-buy]').forEach(function (btn) {
+      btn.addEventListener('click', function () { open(btn); });
+    });
+  }
+
   initFaq();
   initCalc();
   initCarousel();
   initMenu();
+  initCheckout();
 })();
