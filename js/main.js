@@ -61,54 +61,6 @@
     update();
   }
 
-  /* ---------- Карусель відгуків ---------- */
-  function initCarousel() {
-    var root = document.querySelector('.rv');
-    if (!root) return;
-    var view = root.querySelector('.rv-view');
-    var track = root.querySelector('.rv-track');
-    var slides = Array.prototype.slice.call(root.querySelectorAll('.rv-slide'));
-    var dots = Array.prototype.slice.call(root.querySelectorAll('.rv-dot'));
-    var btns = root.querySelectorAll('.rv-btn');
-    var count = slides.length;
-    var current = 0;
-    if (!count) return;
-
-    function go(i) {
-      current = (i % count + count) % count; // по колу в обидва боки
-      track.style.transform = 'translateX(' + (-100 * current) + '%)';
-      slides.forEach(function (s, k) { s.setAttribute('aria-hidden', k === current ? 'false' : 'true'); });
-      dots.forEach(function (d, k) {
-        d.classList.toggle('is-active', k === current);
-        if (k === current) d.setAttribute('aria-current', 'true');
-        else d.removeAttribute('aria-current');
-      });
-    }
-
-    btns[0].addEventListener('click', function () { go(current - 1); });
-    btns[1].addEventListener('click', function () { go(current + 1); });
-    dots.forEach(function (d, k) { d.addEventListener('click', function () { go(k); }); });
-
-    // Стрілки на клавіатурі, коли фокус усередині каруселі.
-    root.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { go(current - 1); e.preventDefault(); }
-      if (e.key === 'ArrowRight') { go(current + 1); e.preventDefault(); }
-    });
-
-    // Свайп пальцем (і мишею).
-    var startX = null, startY = null;
-    view.addEventListener('pointerdown', function (e) { startX = e.clientX; startY = e.clientY; });
-    view.addEventListener('pointerup', function (e) {
-      if (startX === null) return;
-      var dx = e.clientX - startX, dy = e.clientY - startY;
-      startX = null;
-      if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) go(current + (dx < 0 ? 1 : -1));
-    });
-    view.addEventListener('pointercancel', function () { startX = null; });
-
-    go(0);
-  }
-
   /* ---------- Мобільне меню ---------- */
   function initMenu() {
     var nav = document.querySelector('.nav');
@@ -162,7 +114,7 @@
     var current = null;
 
     function price(text) { return parseInt(String(text).replace(/\D/g, ''), 10) || 0; }
-    function money(n) { return n.toLocaleString('uk-UA') + ' грн'; }
+    function money(n) { return n + ' грн'; }
     function plural(n) {
       var m10 = n % 10, m100 = n % 100;
       if (m10 === 1 && m100 !== 11) return n + ' техкарту';
@@ -174,7 +126,9 @@
     function readProduct(btn) {
       var card = btn.closest('.product, .pack');
       var img = card.querySelector('img');
+      var old = card.querySelector('.price-old');
       return {
+        oldPrice: old ? price(old.textContent) : 0,
         id: btn.getAttribute('data-buy'),
         isPack: card.classList.contains('pack'),
         name: card.querySelector('h3').textContent.trim(),
@@ -217,7 +171,15 @@
 
       itemName.textContent = current.name;
       itemDesc.textContent = current.desc;
-      itemPrice.textContent = money(current.price);
+      itemPrice.textContent = '';
+      if (current.oldPrice) {
+        var s = document.createElement('s');
+        s.className = 'price-old';
+        s.textContent = money(current.oldPrice);
+        itemPrice.appendChild(s);
+        itemPrice.appendChild(document.createTextNode(' '));
+      }
+      itemPrice.appendChild(document.createTextNode(money(current.price)));
       itemImg.hidden = !current.img;
       item.classList.toggle('no-img', !current.img);
       if (current.img) { itemImg.src = current.img; itemImg.alt = ''; }
@@ -313,7 +275,6 @@
 
   initFaq();
   initCalc();
-  initCarousel();
   initMenu();
   initCheckout();
 })();

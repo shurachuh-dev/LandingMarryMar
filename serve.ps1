@@ -9,7 +9,7 @@ $types = @{
   '.js' = 'text/javascript; charset=utf-8'; '.json' = 'application/json'
   '.jpg' = 'image/jpeg'; '.jpeg' = 'image/jpeg'; '.png' = 'image/png'
   '.webp' = 'image/webp'; '.svg' = 'image/svg+xml'; '.ico' = 'image/x-icon'
-  '.woff2' = 'font/woff2'; '.txt' = 'text/plain; charset=utf-8'; '.xml' = 'application/xml'
+  '.woff2' = 'font/woff2'; '.webmanifest' = 'application/manifest+json'; '.txt' = 'text/plain; charset=utf-8'; '.xml' = 'application/xml'
 }
 
 $listener = New-Object System.Net.HttpListener
