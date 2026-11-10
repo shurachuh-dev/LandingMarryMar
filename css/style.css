@@ -618,12 +618,15 @@ input:focus-visible {
 
 /* Сітка відгуків */
 .reviews {
-  margin-top: 56px;
+  list-style: none;
+  padding: 0;
+  margin: 56px 0 18px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 24px;
-  margin-bottom: 18px;
 }
+.reviews > li { display: flex; }
+.reviews .quote { flex: 1; }
 .reviews .quote::before {
   content: "“";
   font-family: var(--f-serif);
