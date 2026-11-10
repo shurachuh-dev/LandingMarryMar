@@ -940,3 +940,109 @@ html.modal-open { overflow: hidden; }
 @media (max-width: 420px) {
   .pack-list { grid-template-rows: none; grid-auto-flow: row; }
 }
+
+/* ==========================================================================
+   Розмір торта, досвід авторки, підтримка після покупки
+   ========================================================================== */
+.catalog-hint { margin-top: 10px; font-size: 14px; color: var(--muted); }
+.sec-head .catalog-hint { margin-top: 10px; }
+.catalog-hint a { font-weight: 600; }
+
+.cake-meta {
+  list-style: none;
+  margin: 2px 0 6px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.cake-meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--tint);
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cake-meta svg { flex: none; }
+
+.about-stats {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.about-stats li {
+  flex: 1 1 180px;
+  max-width: 260px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--tint);
+}
+.about-stats b {
+  display: block;
+  font-family: var(--f-sc);
+  font-size: 38px;
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent);
+}
+.about-stats span { display: block; margin-top: 6px; font-size: 14px; color: var(--body); }
+
+.support {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: #fff;
+  border: 1px solid var(--line-2);
+}
+.support-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.support-title {
+  margin: 0 0 4px;
+  font-family: var(--f-sc);
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--accent);
+}
+.support-text p { font-size: 15px; color: var(--body); }
+.support-btn { white-space: nowrap; }
+
+.co-support {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -6px;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+}
+.co-success-support { font-size: 14px; color: var(--body); }
+.co-success-support a { font-weight: 600; }
+
+@media (max-width: 760px) {
+  .support { grid-template-columns: auto 1fr; padding: 22px 20px; align-items: start; }
+  .support-icon { width: 48px; height: 48px; }
+  .support-btn { grid-column: 1 / -1; }
+  .support-title { font-size: 22px; }
+}
