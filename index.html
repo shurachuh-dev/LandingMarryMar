@@ -183,8 +183,29 @@
       </article>
     </div>
 
-    <div class="slot"><b>Місце для промокоду або форми</b>Ідея ще обговорюється: тут з'явиться знижка або форма для всіх трьох груп аудиторії.</div>
-    <p class="note">Далі в планах: техкарти на кекси, паски, цукерки та інші десерти з асортименту Марії.</p>
+    <!-- Підписка на новинки (демо). Як підключити справжній сервіс — див. js/main.js, функція initSubscribe -->
+    <div class="subscribe" id="subscribe">
+      <form class="sub-form" novalidate>
+        <h3 class="sub-title">Дізнавайтеся першими про нові техкарти</h3>
+        <p class="sub-text">Нові смаки тортів, а також капкейки, паски, цукерки та інші десерти — розповімо першими.</p>
+        <div class="sub-row">
+          <label class="sr-only" for="sub-email">Ваш email</label>
+          <input id="sub-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Ваш email" required aria-describedby="sub-email-err">
+          <button class="btn" type="submit">Підписатися</button>
+        </div>
+        <p class="co-err" id="sub-email-err" hidden>Вкажіть коректний email, наприклад name@gmail.com</p>
+        <label class="co-agree sub-agree">
+          <input type="checkbox" id="sub-agree" aria-describedby="sub-agree-err">
+          <span>Погоджуюсь отримувати листи від marymar</span>
+        </label>
+        <p class="co-err" id="sub-agree-err" hidden>Потрібна ваша згода</p>
+      </form>
+      <div class="sub-done" hidden tabindex="-1">
+        <div class="co-check" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+        <p class="sub-title">Дякуємо, ви в списку!</p>
+        <p class="sub-text">Напишемо, щойно з'являться нові техкарти.</p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -278,10 +299,6 @@
       <div class="faq-item">
         <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a9"><span>Чи гарантований результат?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
         <div class="faq-a" id="faq-a9">Техкарта допомагає працювати послідовно, але результат залежить від продуктів, обладнання та досвіду. Кожна техкарта містить точні грами й послідовність збирання.</div>
-      </div>
-      <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a10"><span>Чи з'являться нові смаки та десерти?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a10">Так, асортимент планується розширювати: у перспективі з'являться техкарти на кекси, паски, цукерки та інші десерти.</div>
       </div>
     </div>
   </div>

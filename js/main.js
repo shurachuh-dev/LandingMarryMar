@@ -273,8 +273,102 @@
     });
   }
 
+  /* ---------- Підписка на новинки (демо) ----------
+     ЗАРАЗ: email нікуди не надсилається, просто показуємо «Дякуємо, ви в списку».
+
+     ЯК ПІДКЛЮЧИТИ СПРАВЖНІЙ СЕРВІС — замініть функцію send() нижче:
+
+     1) Formspree (найпростіше, безкоштовний тариф):
+        - зареєструйтесь на formspree.io і створіть форму, отримаєте адресу виду
+          https://formspree.io/f/XXXXXXXX
+        - send = function (mail) {
+            return fetch('https://formspree.io/f/XXXXXXXX', {
+              method: 'POST',
+              headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+              body: JSON.stringify({ email: mail })
+            }).then(function (r) { if (!r.ok) throw new Error('send failed'); });
+          };
+        - листи з адресами приходитимуть вам на пошту, список видно в кабінеті Formspree.
+
+     2) Google Forms (відповіді в Google Таблиці):
+        - створіть форму з одним полем «Email», відкрийте її «попередній перегляд»,
+          у коді сторінки знайдіть адресу .../formResponse і назву поля entry.XXXXXXX
+        - send = function (mail) {
+            var data = new FormData();
+            data.append('entry.XXXXXXX', mail);
+            return fetch('https://docs.google.com/forms/d/e/ВАШ_ID/formResponse', {
+              method: 'POST', mode: 'no-cors', body: data
+            });
+          };
+        - mode: 'no-cors' не дає перевірити відповідь, але запис у таблиці з'явиться.
+
+     3) MailerLite (повноцінні розсилки):
+        - у MailerLite створіть групу й вбудовану форму (Forms → Embedded forms),
+          скопіюйте адресу action з її HTML-коду (https://assets.mailerlite.com/jsonp/.../subscribe)
+        - send = function (mail) {
+            var data = new FormData();
+            data.append('fields[email]', mail);
+            return fetch('АДРЕСА_ACTION_З_MAILERLITE', { method: 'POST', body: data })
+              .then(function (r) { if (!r.ok) throw new Error('send failed'); });
+          };
+        - MailerLite сам надсилатиме лист-підтвердження й розсилки.
+  */
+  function initSubscribe() {
+    var box = document.getElementById('subscribe');
+    if (!box) return;
+    var form = box.querySelector('.sub-form');
+    var done = box.querySelector('.sub-done');
+    var email = document.getElementById('sub-email');
+    var emailErr = document.getElementById('sub-email-err');
+    var agree = document.getElementById('sub-agree');
+    var agreeErr = document.getElementById('sub-agree-err');
+    var btn = form.querySelector('button[type="submit"]');
+    var emailErrText = emailErr.textContent;
+
+    // ДЕМО-відправка. Замініть на один із варіантів із коментаря вище.
+    var send = function (mail) {
+      return new Promise(function (resolve) { setTimeout(resolve, 600); });
+    };
+
+    function isEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(v).trim()); }
+    function showError(input, err, show) {
+      err.hidden = !show;
+      input.setAttribute('aria-invalid', show ? 'true' : 'false');
+    }
+
+    email.addEventListener('input', function () {
+      if (email.getAttribute('aria-invalid') === 'true' && isEmail(email.value)) showError(email, emailErr, false);
+    });
+    agree.addEventListener('change', function () { if (agree.checked) showError(agree, agreeErr, false); });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      emailErr.textContent = emailErrText;
+      var okEmail = isEmail(email.value);
+      var okAgree = agree.checked;
+      showError(email, emailErr, !okEmail);
+      showError(agree, agreeErr, !okAgree);
+      if (!okEmail) { email.focus(); return; }
+      if (!okAgree) { agree.focus(); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Надсилаємо…';
+      send(email.value.trim()).then(function () {
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+      }).catch(function () {
+        btn.disabled = false;
+        btn.textContent = 'Підписатися';
+        emailErr.textContent = 'Не вдалося підписатися. Спробуйте ще раз пізніше.';
+        emailErr.hidden = false;
+      });
+    });
+  }
+
   initFaq();
   initCalc();
+  initSubscribe();
   initMenu();
   initCheckout();
 })();
