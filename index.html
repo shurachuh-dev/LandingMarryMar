@@ -91,19 +91,40 @@
 <!-- ===== 2. Що всередині ===== -->
 <section class="sec" id="inside">
   <div class="wrap inside">
-    <picture><source type="image/webp" srcset="assets/img/inside-techcard-480.webp 480w, assets/img/inside-techcard.webp 772w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-techcard.jpg" alt="Аркуш техкарти поруч зі шматком торта" width="772" height="724" loading="lazy" decoding="async"></picture>
+    <div class="tc-slider" role="region" aria-roledescription="карусель" aria-label="Сторінки техкарти">
+      <div class="tc-track">
+        <div class="tc-slide is-active" role="group" aria-roledescription="слайд" aria-label="1 з 4: Інгредієнти та грами"><picture><source type="image/webp" srcset="assets/img/inside-step1-480.webp 480w, assets/img/inside-step1.webp 772w, assets/img/inside-step1-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step1.jpg" alt="Рецепт торта у техкарті: інгредієнти та грами для бісквіта, соусу й крему, розмір і вага торта" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="2 з 4: Приготування коржів"><picture><source type="image/webp" srcset="assets/img/inside-step2-480.webp 480w, assets/img/inside-step2.webp 772w, assets/img/inside-step2-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step2.jpg" alt="Рецепт торта у техкарті: випікання шоколадного бісквіта і розрізання на 3 коржі" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="3 з 4: Як замішати крем"><picture><source type="image/webp" srcset="assets/img/inside-step3-480.webp 480w, assets/img/inside-step3.webp 772w, assets/img/inside-step3-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step3.jpg" alt="Рецепт торта у техкарті: як замішати кремчіз і до якого стану збивати" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="4 з 4: Порядок збирання"><picture><source type="image/webp" srcset="assets/img/inside-step4-480.webp 480w, assets/img/inside-step4.webp 772w, assets/img/inside-step4-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step4.jpg" alt="Рецепт торта у техкарті: схема і порядок збирання шарів" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+      </div>
+      <div class="tc-ctrl">
+        <button class="tc-pause" type="button" aria-label="Зупинити показ"><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+        <div class="tc-dots">
+          <button class="tc-dot" type="button" aria-label="Слайд 1: Інгредієнти та грами" aria-current="true"></button>
+          <button class="tc-dot" type="button" aria-label="Слайд 2: Приготування коржів" aria-current="false"></button>
+          <button class="tc-dot" type="button" aria-label="Слайд 3: Як замішати крем" aria-current="false"></button>
+          <button class="tc-dot" type="button" aria-label="Слайд 4: Порядок збирання" aria-current="false"></button>
+        </div>
+        <p class="tc-cap" aria-hidden="true">Інгредієнти та грами</p>
+      </div>
+    </div>
     <div>
       <p class="eyebrow">Що всередині техкарти</p>
-      <h2 class="disp sec-title-lg">Одна техкарта — один торт: від інгредієнтів до збирання</h2>
-      <p class="inside-lead">Авторські рецепти тортів для кондитерів у PDF: точні пропорції та етапи приготування. Ви бачите весь шлях до готового торта ще до першого замісу.</p>
-      <div class="cols2">
-        <div><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок на першому замовленні.</p></div>
-        <div><h3>Професіоналам</h3><p>Готовий перевірений смак для меню без довгих тестувань.</p></div>
-      </div>
-      <ul class="check" aria-label="Що в техкарті">
-        <li>Інгредієнти з точними кількостями</li>
-        <li>Етапи приготування кожного шару</li>
-        <li>Послідовність збирання торта</li>
+      <h2 class="disp sec-title-lg">Техкарта — рецепт до грама</h2>
+      <p class="inside-lead">Техкарта — це детальний рецепт торта у PDF: точні грами, температури й порядок дій для кожного шару. Інструкція, за якою торт щоразу виходить однаковим.</p>
+      <h3 class="inside-sub">Що ви отримаєте після покупки</h3>
+      <ul class="check">
+        <li>Склад і грами для кожного шару</li>
+        <li>Покрокове приготування коржів, крему й начинки</li>
+        <li>Температури й час випікання та охолодження</li>
+        <li>Схему збирання торта шар за шаром</li>
+        <li>PDF на ваш email одразу після оплати</li>
+      </ul>
+      <ul class="aud" aria-label="Для кого техкарти">
+        <li><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок з першого разу.</p></li>
+        <li><h3>Любителям</h3><p>Святковий торт удома без пошуку й перевірки рецептів.</p></li>
+        <li><h3>Професіоналам</h3><p>Перевірений смак для меню без довгих тестувань.</p></li>
       </ul>
     </div>
   </div>

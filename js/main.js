@@ -1,4 +1,4 @@
-// Інтерактив лендінгу: FAQ, калькулятор, карусель відгуків, мобільне меню.
+// Інтерактив лендінгу: FAQ, слайдер техкарти, калькулятор, підписка, меню, оплата.
 (function () {
   'use strict';
 
@@ -366,7 +366,62 @@
     });
   }
 
+  /* ---------- Слайдер сторінок техкарти: зміна кожні 2 с ----------
+     Зупиняється, коли наведено курсор миші, коли слайдер поза екраном,
+     вкладку сховано або натиснуто паузу. При «менше анімації» сам не крутиться. */
+  function initTcSlider() {
+    var root = document.querySelector('.tc-slider');
+    if (!root) return;
+    var DELAY = 2000;
+    var slides = root.querySelectorAll('.tc-slide');
+    var dots = root.querySelectorAll('.tc-dot');
+    var pauseBtn = root.querySelector('.tc-pause');
+    var cap = root.querySelector('.tc-cap');
+    var current = 0, timer = null;
+    var paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var hovered = false, visible = false;
+
+    function show(n) {
+      current = (n + slides.length) % slides.length;
+      for (var i = 0; i < slides.length; i++) {
+        slides[i].classList.toggle('is-active', i === current);
+        dots[i].setAttribute('aria-current', i === current ? 'true' : 'false');
+      }
+      cap.textContent = dots[current].getAttribute('aria-label').replace(/^Слайд \d+: /, '');
+    }
+
+    function update() {
+      clearInterval(timer);
+      timer = null;
+      root.classList.toggle('is-paused', paused);
+      pauseBtn.setAttribute('aria-label', paused ? 'Продовжити показ' : 'Зупинити показ');
+      if (!paused && !hovered && visible && !document.hidden) {
+        timer = setInterval(function () { show(current + 1); }, DELAY);
+      }
+    }
+
+    Array.prototype.forEach.call(dots, function (dot, i) {
+      dot.addEventListener('click', function () { show(i); update(); });
+    });
+    pauseBtn.addEventListener('click', function () { paused = !paused; update(); });
+    // Лише миша: на телефоні дотик не має залишати слайдер на паузі.
+    root.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { hovered = true; update(); } });
+    root.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { hovered = false; update(); } });
+    document.addEventListener('visibilitychange', update);
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[entries.length - 1].isIntersecting;
+        update();
+      }, { threshold: 0.3 }).observe(root);
+    } else {
+      visible = true;
+    }
+    update();
+  }
+
   initFaq();
+  initTcSlider();
   initCalc();
   initSubscribe();
   initMenu();

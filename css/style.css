@@ -379,16 +379,6 @@ input:focus-visible {
 .inside h2 { margin: 10px 0 16px; }
 .inside-lead { max-width: 520px; color: var(--body); }
 
-.cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 26px; }
-.cols2 h3 {
-  margin: 0 0 6px;
-  font-family: var(--f-sc);
-  font-weight: 600;
-  font-size: 22px;
-  color: var(--accent);
-}
-.cols2 p { font-size: 14px; color: var(--body); }
-
 /* ---------- 3. Каталог ---------- */
 .catalog-sub {
   font-family: var(--f-serif);
@@ -439,9 +429,9 @@ input:focus-visible {
 }
 .product-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .product h3 {
-  font-family: var(--f-script);
-  font-weight: 400;
-  font-size: 30px;
+  font-family: var(--f-sc);
+  font-weight: 600;
+  font-size: 26px;
   color: var(--accent);
   line-height: 1.1;
 }
@@ -742,7 +732,6 @@ input:focus-visible {
   .benefits > div { border-left: 0; padding: 16px 8px; }
 
   .inside { grid-template-columns: 1fr; gap: 28px; }
-  .cols2 { grid-template-columns: 1fr; }
   .about { grid-template-columns: 1fr; gap: 32px; }
 
 }
@@ -817,7 +806,7 @@ html.modal-open { overflow: hidden; }
 .co-item-img { width: 96px; height: 64px; object-fit: cover; border-radius: 10px; display: block; background: #f6f1f1; }
 .co-item-img[hidden] { display: none; }
 .co-item.no-img { grid-template-columns: 1fr auto; }
-.co-item-name { font-family: var(--f-script); font-size: 26px; color: var(--accent); line-height: 1.1; }
+.co-item-name { font-family: var(--f-sc); font-weight: 600; font-size: 22px; color: var(--accent); line-height: 1.1; }
 .co-item-desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
 .co-item-price { font-weight: 600; white-space: nowrap; }
 
@@ -1045,4 +1034,111 @@ html.modal-open { overflow: hidden; }
   .support-icon { width: 48px; height: 48px; }
   .support-btn { grid-column: 1 / -1; }
   .support-title { font-size: 22px; }
+}
+
+/* ==========================================================================
+   Що всередині: слайдер сторінок техкарти, аудиторія
+   ========================================================================== */
+.tc-slider { min-width: 0; }
+.tc-track {
+  position: relative;
+  aspect-ratio: 772 / 724;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line-2);
+}
+.tc-slide {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 2s ease, visibility 0s linear 2s;
+}
+.tc-slide.is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
+.tc-slide picture, .tc-slide img { width: 100%; height: 100%; }
+.inside .tc-slide img { border-radius: 0; object-fit: cover; }
+
+.tc-ctrl { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
+.tc-pause {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line-2);
+  background: #fff;
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  padding: 0;
+}
+.tc-pause:hover { background: var(--tint); }
+.tc-pause .i-play { display: none; }
+.tc-slider.is-paused .tc-pause .i-play { display: block; }
+.tc-slider.is-paused .tc-pause .i-pause { display: none; }
+.tc-dots { display: flex; }
+.tc-dot {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  background: none;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.tc-dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--line-2);
+  transition: width .3s ease, background-color .3s ease;
+}
+.tc-dot[aria-current="true"]::before { width: 22px; background: var(--accent); }
+.tc-cap {
+  margin: 0;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 19px;
+  color: var(--accent);
+  min-width: 0;
+}
+
+.inside-sub {
+  margin: 26px 0 0;
+  font-family: var(--f-sc);
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--accent);
+  line-height: 1.2;
+}
+.inside-sub + .check { margin-top: 12px; }
+
+.aud { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 12px; }
+.aud li {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+.aud h3 {
+  margin: 0;
+  font-family: var(--f-sc);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--accent);
+}
+.aud p { margin: 0; font-size: 14px; color: var(--body); }
+
+@media (max-width: 480px) {
+  .aud li { grid-template-columns: 1fr; gap: 2px; }
+  .tc-cap { font-size: 17px; line-height: 1.2; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-slide, .tc-dot::before { transition: none; }
 }
