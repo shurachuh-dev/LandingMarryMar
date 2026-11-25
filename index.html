@@ -245,6 +245,24 @@ input:focus-visible {
   overflow-x: clip;
 }
 
+/* Закріплена шапка: на старті зливається з фоном Hero, після прокрутки — біла з тінню */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #F7ECEB;
+  transition: background-color .25s ease, box-shadow .25s ease;
+}
+.topbar.is-stuck {
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 1px 0 var(--line), 0 8px 24px rgba(56, 50, 53, .06);
+}
+@supports (backdrop-filter: blur(8px)) {
+  .topbar.is-stuck { background: rgba(255, 255, 255, .82); backdrop-filter: blur(8px); }
+}
+/* Переходи з меню: заголовок розділу не ховається під шапкою */
+html { scroll-padding-top: 96px; }
+
 .nav {
   display: flex;
   align-items: center;
@@ -388,8 +406,8 @@ input:focus-visible {
   align-items: center;
 }
 .inside img { width: 100%; border-radius: 20px; display: block; }
-.inside h2 { margin: 10px 0 16px; }
-.inside-lead { max-width: 520px; color: var(--body); }
+.inside-head { margin-bottom: 36px; }
+.inside-head h2 { margin-top: 10px; }
 
 /* ---------- 3. Каталог ---------- */
 .catalog-sub {
@@ -525,6 +543,23 @@ input:focus-visible {
   padding-top: 8px;
 }
 .cart-btn--white:focus-visible { outline-color: #fff; }
+/* Пакет один на всю ширину: на комп'ютері — у рядок «опис | смаки | ціна» */
+@media (min-width: 1100px) {
+  .pack--hl {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr) auto;
+    grid-template-rows: auto auto 1fr;
+    column-gap: 48px;
+    row-gap: 6px;
+    align-items: start;
+    padding: 28px 32px;
+  }
+  .pack--hl .tag { grid-column: 1; justify-self: start; }
+  .pack--hl h3 { grid-column: 1; }
+  .pack--hl > p { grid-column: 1; }
+  .pack--hl .pack-list { grid-column: 2; grid-row: 1 / 4; align-self: center; margin: 0; }
+  .pack--hl .pack-foot { grid-column: 3; grid-row: 1 / 4; align-self: center; margin: 0; padding: 0; gap: 24px; }
+}
 
 /* Підписка на новинки */
 .subscribe {
@@ -1052,23 +1087,28 @@ html.modal-open { overflow: hidden; }
    Що всередині: слайдер сторінок техкарти, аудиторія
    ========================================================================== */
 .tc-slider { min-width: 0; }
+/* Стрічка зі слайдами: гортається пальцем (як в Instagram), кожен слайд «доклацується» */
 .tc-track {
-  position: relative;
+  display: flex;
   aspect-ratio: 772 / 724;
   border-radius: 20px;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
   background: #fff;
   border: 1px solid var(--line-2);
 }
+.tc-track::-webkit-scrollbar { display: none; }
+/* Під час автоперелистування JS вимикає «доклацування», щоб анімація йшла плавно */
+.tc-track.is-animating { scroll-snap-type: none; }
 .tc-slide {
-  position: absolute;
-  inset: 0;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   margin: 0;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 2s ease, visibility 0s linear 2s;
 }
-.tc-slide.is-active { opacity: 1; visibility: visible; transition-delay: 0s; }
 .tc-slide picture, .tc-slide img { width: 100%; height: 100%; }
 .inside .tc-slide img { border-radius: 0; object-fit: cover; }
 
@@ -1120,7 +1160,7 @@ html.modal-open { overflow: hidden; }
 }
 
 .inside-sub {
-  margin: 26px 0 0;
+  margin: 0;
   font-family: var(--f-sc);
   font-weight: 600;
   font-size: 22px;
@@ -1152,7 +1192,7 @@ html.modal-open { overflow: hidden; }
   .tc-cap { font-size: 17px; line-height: 1.2; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tc-slide, .tc-dot::before { transition: none; }
+  .tc-dot::before { transition: none; }
 }
   </style>
 
@@ -1179,7 +1219,7 @@ html.modal-open { overflow: hidden; }
 <body>
 
 <!-- ===== 1. Перший екран ===== -->
-<header class="hero">
+<header class="topbar">
   <div class="wrap">
     <div class="nav">
       <a class="logo" href="#top" aria-label="Marymar, авторські техкарти">Marymar<small>Авторські техкарти</small></a>
@@ -1196,7 +1236,12 @@ html.modal-open { overflow: hidden; }
         <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span></button>
       </div>
     </div>
+  </div>
+</header>
 
+<main>
+<section class="hero">
+  <div class="wrap">
     <div class="hero-grid" id="top">
       <div class="hero-text">
         <h1 class="disp hero-title">Техкарти тортів від marymar: авторські рецепти в PDF</h1>
@@ -1231,48 +1276,48 @@ html.modal-open { overflow: hidden; }
     </div>
     <p class="note hero-note">Це цифрові рецепти у форматі PDF, а не замовлення готових тортів.</p>
   </div>
-</header>
+</section>
 
-<main>
 
 <!-- ===== 2. Що всередині ===== -->
 <section class="sec" id="inside">
-  <div class="wrap inside">
-    <div class="tc-slider" role="region" aria-roledescription="карусель" aria-label="Сторінки техкарти">
-      <div class="tc-track">
-        <div class="tc-slide is-active" role="group" aria-roledescription="слайд" aria-label="1 з 4: Інгредієнти та грами"><picture><source type="image/webp" srcset="assets/img/inside-step1-480.webp 480w, assets/img/inside-step1.webp 772w, assets/img/inside-step1-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step1.jpg" alt="Рецепт торта у техкарті: інгредієнти та грами для бісквіта, соусу й крему, розмір і вага торта" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="2 з 4: Приготування коржів"><picture><source type="image/webp" srcset="assets/img/inside-step2-480.webp 480w, assets/img/inside-step2.webp 772w, assets/img/inside-step2-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step2.jpg" alt="Рецепт торта у техкарті: випікання шоколадного бісквіта і розрізання на 3 коржі" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="3 з 4: Як замішати крем"><picture><source type="image/webp" srcset="assets/img/inside-step3-480.webp 480w, assets/img/inside-step3.webp 772w, assets/img/inside-step3-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step3.jpg" alt="Рецепт торта у техкарті: як замішати кремчіз і до якого стану збивати" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-        <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="4 з 4: Порядок збирання"><picture><source type="image/webp" srcset="assets/img/inside-step4-480.webp 480w, assets/img/inside-step4.webp 772w, assets/img/inside-step4-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step4.jpg" alt="Рецепт торта у техкарті: схема і порядок збирання шарів" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-      </div>
-      <div class="tc-ctrl">
-        <button class="tc-pause" type="button" aria-label="Зупинити показ"><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
-        <div class="tc-dots">
-          <button class="tc-dot" type="button" aria-label="Слайд 1: Інгредієнти та грами" aria-current="true"></button>
-          <button class="tc-dot" type="button" aria-label="Слайд 2: Приготування коржів" aria-current="false"></button>
-          <button class="tc-dot" type="button" aria-label="Слайд 3: Як замішати крем" aria-current="false"></button>
-          <button class="tc-dot" type="button" aria-label="Слайд 4: Порядок збирання" aria-current="false"></button>
-        </div>
-        <p class="tc-cap" aria-hidden="true">Інгредієнти та грами</p>
-      </div>
-    </div>
-    <div>
+  <div class="wrap">
+    <div class="inside-head">
       <p class="eyebrow">Що всередині техкарти</p>
       <h2 class="disp sec-title-lg">Техкарта — рецепт до грама</h2>
-      <p class="inside-lead">Техкарта — це детальний рецепт торта у PDF: точні грами, температури й порядок дій для кожного шару. Інструкція, за якою торт щоразу виходить однаковим.</p>
-      <h3 class="inside-sub">Що ви отримаєте після покупки</h3>
-      <ul class="check">
-        <li>Склад і грами для кожного шару</li>
-        <li>Покрокове приготування коржів, крему й начинки</li>
-        <li>Температури й час випікання та охолодження</li>
-        <li>Схему збирання торта шар за шаром</li>
-        <li>PDF на ваш email одразу після оплати</li>
-      </ul>
-      <ul class="aud" aria-label="Для кого техкарти">
-        <li><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок з першого разу.</p></li>
-        <li><h3>Любителям</h3><p>Святковий торт удома без пошуку й перевірки рецептів.</p></li>
-        <li><h3>Професіоналам</h3><p>Перевірений смак для меню без довгих тестувань.</p></li>
-      </ul>
+    </div>
+    <div class="inside">
+      <div class="tc-slider" role="region" aria-roledescription="карусель" aria-label="Сторінки техкарти">
+        <div class="tc-track">
+          <div class="tc-slide is-active" role="group" aria-roledescription="слайд" aria-label="1 з 3: Приготування коржів"><picture><source type="image/webp" srcset="assets/img/inside-step2-480.webp 480w, assets/img/inside-step2.webp 772w, assets/img/inside-step2-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step2.jpg" alt="Рецепт торта у техкарті: випікання шоколадного бісквіта і розрізання на 3 коржі" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+          <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="2 з 3: Як замішати крем"><picture><source type="image/webp" srcset="assets/img/inside-step3-480.webp 480w, assets/img/inside-step3.webp 772w, assets/img/inside-step3-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step3.jpg" alt="Рецепт торта у техкарті: як замішати кремчіз і до якого стану збивати" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+          <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="3 з 3: Порядок збирання"><picture><source type="image/webp" srcset="assets/img/inside-step4-480.webp 480w, assets/img/inside-step4.webp 772w, assets/img/inside-step4-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step4.jpg" alt="Рецепт торта у техкарті: схема і порядок збирання шарів" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+        </div>
+        <div class="tc-ctrl">
+          <button class="tc-pause" type="button" aria-label="Зупинити показ"><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
+          <div class="tc-dots">
+            <button class="tc-dot" type="button" aria-label="Слайд 1: Приготування коржів" aria-current="true"></button>
+            <button class="tc-dot" type="button" aria-label="Слайд 2: Як замішати крем" aria-current="false"></button>
+            <button class="tc-dot" type="button" aria-label="Слайд 3: Порядок збирання" aria-current="false"></button>
+          </div>
+          <p class="tc-cap" aria-hidden="true">Приготування коржів</p>
+        </div>
+      </div>
+      <div>
+        <h3 class="inside-sub">Що ви отримаєте після покупки</h3>
+        <ul class="check">
+          <li>Склад і грами для кожного шару</li>
+          <li>Покрокове приготування коржів, крему й начинки</li>
+          <li>Температури й час випікання та охолодження</li>
+          <li>Схему збирання торта шар за шаром</li>
+          <li>PDF на ваш email одразу після оплати</li>
+        </ul>
+        <ul class="aud" aria-label="Для кого техкарти">
+          <li><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок з першого разу.</p></li>
+          <li><h3>Любителям</h3><p>Святковий торт удома без пошуку й перевірки рецептів.</p></li>
+          <li><h3>Професіоналам</h3><p>Перевірений смак для меню без довгих тестувань.</p></li>
+        </ul>
+      </div>
     </div>
   </div>
 </section>
@@ -1346,9 +1391,6 @@ html.modal-open { overflow: hidden; }
     </div>
 
     <div class="packs">
-      <article class="pack"><span class="tag">Для меню</span><h3>Збірка смаків</h3><p>Кілька техкарт в одному наборі.</p>
-        <div class="pack-foot"><span class="price">750 грн</span><button class="cart-btn" type="button" data-buy="zbirka" aria-label="Купити Збірку смаків"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/><path d="M2.5 3h2.6l2.4 11.2a1.6 1.6 0 0 0 1.6 1.3h8.6a1.6 1.6 0 0 0 1.6-1.2L21 7H6"/></svg></button></div>
-      </article>
       <article class="pack pack--hl"><span class="tag">Усі смаки</span><h3>Пакет усіх техкарт</h3><p>Усі наявні смаки; нові додаватимуться з часом.</p>
         <ul class="pack-list">
           <li>Вишня-шоколад</li><li>Фісташка-малина</li><li>Кава гляссе</li>
@@ -1464,32 +1506,20 @@ html.modal-open { overflow: hidden; }
         <div class="faq-a" id="faq-a2">Смак у техкарті відпрацьований на реальних замовленнях Марії, а шари вже підібрані один до одного. Не потрібно збирати рецепт із кількох відео й перевіряти, чи поєднуються начинки. Калькулятор на сайті допоможе перерахувати інгредієнти під вашу форму.</div>
       </div>
       <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a3"><span>Якою мовою техкарта?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a3">Українською. Усі інгредієнти, кількості та етапи приготування й збирання описані українською мовою.</div>
+        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a3"><span>Як оплатити та коли надійде файл?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
+        <div class="faq-a" id="faq-a3">Натисніть кнопку з кошиком біля смаку чи пакета, вкажіть email і оберіть спосіб оплати: картка, Apple Pay або Google Pay. Після оплати PDF надходить на вказаний email.</div>
       </div>
       <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a4"><span>Чи можна купити лише один смак?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a4">Так. Можна обрати одну техкарту, збірку з кількох смаків або пакет усіх наявних техкарт.</div>
+        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a4"><span>Що робити, якщо файл не прийшов?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
+        <div class="faq-a" id="faq-a4">Спершу перевірте папки «Спам» і «Промоакції». Якщо листа немає, напишіть Марії в Direct <a href="https://www.instagram.com/marymar.cake/">@marymar.cake</a> і вкажіть email, на який оформлювали покупку.</div>
       </div>
       <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a5"><span>Як оплатити та коли надійде файл?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a5">Натисніть кнопку з кошиком біля смаку чи пакета, вкажіть email і оберіть спосіб оплати: картка, Apple Pay або Google Pay. Після оплати PDF надходить на вказаний email.</div>
+        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a5"><span>Чи підійде техкарта для домашньої кухні?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
+        <div class="faq-a" id="faq-a5">Так. Техкарти створені для різного рівня: від першого торта до оновлення професійного меню. Калькулятор допоможе перерахувати інгредієнти під вашу форму.</div>
       </div>
       <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a6"><span>Що робити, якщо файл не прийшов?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a6">Спершу перевірте папки «Спам» і «Промоакції». Якщо листа немає, напишіть Марії в Direct <a href="https://www.instagram.com/marymar.cake/">@marymar.cake</a> і вкажіть email, на який оформлювали покупку.</div>
-      </div>
-      <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a7"><span>Чи підійде техкарта для домашньої кухні?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a7">Так. Техкарти створені для різного рівня: від першого торта до оновлення професійного меню. Калькулятор допоможе перерахувати інгредієнти під вашу форму.</div>
-      </div>
-      <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a8"><span>Чи можна продавати торти за цими рецептами?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a8">Так, торти за техкартою можна пекти на продаж. Передавати, публікувати чи перепродавати сам PDF-файл не можна.</div>
-      </div>
-      <div class="faq-item">
-        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a9"><span>Чи гарантований результат?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
-        <div class="faq-a" id="faq-a9">Техкарта допомагає працювати послідовно, але результат залежить від продуктів, обладнання та досвіду. Кожна техкарта містить точні грами й послідовність збирання. А якщо щось не виходить — протягом 14 днів після покупки Марія відповідає на питання за рецептом у Direct.</div>
+        <h3 class="faq-h"><button class="faq-q" type="button" aria-expanded="false" aria-controls="faq-a6"><span>Чи можна продавати торти за цими рецептами?</span><span class="faq-sign" aria-hidden="true">+</span></button></h3>
+        <div class="faq-a" id="faq-a6">Так, торти за техкартою можна пекти на продаж. Передавати, публікувати чи перепродавати сам PDF-файл не можна.</div>
       </div>
     </div>
   </div>
@@ -1498,7 +1528,7 @@ html.modal-open { overflow: hidden; }
 <!-- ===== 7. Фінальний заклик ===== -->
 <section class="cta">
   <div class="wrap">
-    <h2 class="disp">Спечіть наступний вдалий торт разом з нашим рецептом: придбайте техкарту вже сьогодні</h2>
+    <h2 class="disp">Ваш наступний торт — за техкартою Марії</h2>
     <a class="btn btn--white" href="#smaky">Обрати техкарту</a>
   </div>
 </section>
