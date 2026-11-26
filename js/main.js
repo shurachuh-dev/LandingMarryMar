@@ -1,4 +1,4 @@
-// Інтерактив лендінгу: FAQ, слайдер техкарти, калькулятор, підписка, меню, оплата.
+// Інтерактив лендінгу: FAQ, калькулятор, підписка, меню, шапка, оплата.
 (function () {
   'use strict';
 
@@ -119,6 +119,9 @@
     var agreeErr = document.getElementById('co-agree-err');
     var totalOut = document.getElementById('co-total');
     var submit = document.getElementById('co-submit');
+    var title = document.getElementById('co-title');
+    // Сенсорний екран без миші (телефон, планшет).
+    var touchScreen = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
     var opener = null;
     var current = null;
 
@@ -216,8 +219,20 @@
       updateTotal();
       document.documentElement.classList.add('modal-open');
       dlg.showModal();
-      email.focus();
+      // На телефоні не ставимо курсор у поле одразу, інакше відкривається клавіатура.
+      // Фокус — на заголовок вікна; клавіатура з'явиться, коли людина сама торкнеться поля email.
+      if (touchScreen) {
+        title.setAttribute('tabindex', '-1');
+        title.focus({ preventScroll: true });
+      } else {
+        email.focus();
+      }
     }
+
+    // Гортання вікна пальцем ховає клавіатуру (як у звичайних застосунках).
+    dlg.addEventListener('touchmove', function () {
+      if (document.activeElement === email) email.blur();
+    }, { passive: true });
 
     function unlock() { document.documentElement.classList.remove('modal-open'); }
     function close() {
@@ -334,6 +349,12 @@
     var btn = form.querySelector('button[type="submit"]');
     var emailErrText = emailErr.textContent;
 
+    // Телефон: гортання сторінки пальцем ховає клавіатуру, поки курсор у полі email.
+    // Саме рух пальця, а не будь-яка прокрутка: при відкритті клавіатури телефон сам підкручує сторінку.
+    document.addEventListener('touchmove', function () {
+      if (document.activeElement === email) email.blur();
+    }, { passive: true });
+
     // ДЕМО-відправка. Замініть на один із варіантів із коментаря вище.
     var send = function (mail) {
       return new Promise(function (resolve) { setTimeout(resolve, 600); });
@@ -375,115 +396,7 @@
     });
   }
 
-  /* ---------- Слайдер сторінок техкарти ----------
-     Слайди їдуть убік: самі — кожні 4 с, а на телефоні їх можна гортати пальцем,
-     як в Instagram. Автоперелистування зупиняється, коли наведено курсор миші,
-     слайдер поза екраном, вкладку сховано, натиснуто паузу або людина почала
-     гортати пальцем. При «менше анімації» слайди самі не гортаються. */
-  function initTcSlider() {
-    var root = document.querySelector('.tc-slider');
-    if (!root) return;
-    var DELAY = 4000;   // скільки слайд стоїть, мс
-    var ANIM = 600;     // тривалість зсуву, мс
-    var track = root.querySelector('.tc-track');
-    var slides = root.querySelectorAll('.tc-slide');
-    var dots = root.querySelectorAll('.tc-dot');
-    var pauseBtn = root.querySelector('.tc-pause');
-    var cap = root.querySelector('.tc-cap');
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var current = 0, timer = null, anim = null, ticking = false;
-    var paused = reduce;
-    var hovered = false, visible = false;
-
-    function setActive(n) {
-      current = n;
-      for (var i = 0; i < slides.length; i++) {
-        slides[i].classList.toggle('is-active', i === n);
-        dots[i].setAttribute('aria-current', i === n ? 'true' : 'false');
-      }
-      cap.textContent = dots[n].getAttribute('aria-label').replace(/^Слайд \d+: /, '');
-    }
-
-    function stopAnim() {
-      if (anim) cancelAnimationFrame(anim);
-      anim = null;
-      track.classList.remove('is-animating');
-    }
-
-    // Плавний зсув із вимкненим «доклацуванням», щоб браузер не смикав стрічку посеред руху.
-    function scrollToX(to) {
-      stopAnim();
-      if (reduce) { track.scrollLeft = to; return; }
-      var from = track.scrollLeft, t0 = null;
-      track.classList.add('is-animating');
-      function step(now) {
-        if (t0 === null) t0 = now;
-        var p = Math.min(1, (now - t0) / ANIM);
-        var e = p < 0.5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
-        track.scrollLeft = from + (to - from) * e;
-        if (p < 1) { anim = requestAnimationFrame(step); } else { anim = null; track.classList.remove('is-animating'); }
-      }
-      anim = requestAnimationFrame(step);
-    }
-
-    function goTo(n) {
-      n = (n + slides.length) % slides.length;
-      setActive(n);
-      scrollToX(n * track.clientWidth);
-    }
-
-    function update() {
-      clearInterval(timer);
-      timer = null;
-      root.classList.toggle('is-paused', paused);
-      pauseBtn.setAttribute('aria-label', paused ? 'Продовжити показ' : 'Зупинити показ');
-      if (!paused && !hovered && visible && !document.hidden) {
-        timer = setInterval(function () { goTo(current + 1); }, DELAY);
-      }
-    }
-
-    // Гортання пальцем або тачпадом: крапки й підпис стежать за положенням стрічки.
-    track.addEventListener('scroll', function () {
-      if (anim || ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        ticking = false;
-        var n = Math.round(track.scrollLeft / track.clientWidth);
-        if (n !== current && n >= 0 && n < slides.length) setActive(n);
-      });
-    }, { passive: true });
-    // Людина почала гортати пальцем — автоперелистування більше не заважає (▶ вмикає знову).
-    track.addEventListener('touchstart', function () {
-      stopAnim();
-      if (!paused) { paused = true; update(); }
-    }, { passive: true });
-    window.addEventListener('resize', function () {
-      stopAnim();
-      track.scrollLeft = current * track.clientWidth;
-    });
-
-    Array.prototype.forEach.call(dots, function (dot, i) {
-      dot.addEventListener('click', function () { goTo(i); update(); });
-    });
-    pauseBtn.addEventListener('click', function () { paused = !paused; update(); });
-    // Лише миша: на телефоні дотик керує гортанням, а не паузою від наведення.
-    root.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') { hovered = true; update(); } });
-    root.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { hovered = false; update(); } });
-    document.addEventListener('visibilitychange', update);
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[entries.length - 1].isIntersecting;
-        update();
-      }, { threshold: 0.3 }).observe(root);
-    } else {
-      visible = true;
-    }
-    update();
-  }
-
   initFaq();
-  initTcSlider();
   initCalc();
   initSubscribe();
   initMenu();

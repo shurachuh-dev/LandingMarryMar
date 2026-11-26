@@ -84,15 +84,16 @@
 
 /* ---------- Кольори ---------- */
 :root {
-  --accent: #6A1027;       /* бордо — головний колір */
-  --accent-dark: #4a0b1b;  /* бордо при наведенні */
-  --tint: #FBF4F5;         /* світло-рожевий фон секцій */
-  --line: #F3E4E6;         /* лінії, рамки */
-  --line-2: #E7CDD1;       /* рамки пакетів, неактивні точки */
-  --rose: #C9A0A5;         /* пудровий: маркери, рамки полів */
-  --text: #383235;
-  --body: #4d4549;
-  --muted: #6B6166;
+  /* Палітра: бордовий #6A1027 + теплий сірий PANTONE Warm Gray + білий */
+  --accent: #6A1027;       /* бордовий — головний колір */
+  --accent-dark: #4A0B1B;  /* темніший бордовий — при наведенні */
+  --tint: #F5F3F1;         /* фон секцій і карток — Warm Gray 1 C, 25% */
+  --line: #EAE6E1;         /* тонкі лінії — Warm Gray 1 C, 55% */
+  --line-2: #D7D2CB;       /* рамки карток — PANTONE Warm Gray 1 C */
+  --rose: #BFB8AF;         /* крапки, декор — PANTONE Warm Gray 3 C */
+  --text: #3D3935;         /* заголовки, текст — PANTONE Black 7 C */
+  --body: #5C534D;         /* основний текст — Warm Gray 11 C, темніше */
+  --muted: #6E6259;        /* підписи — PANTONE Warm Gray 11 C */
 
   --f-sans: 'Manrope', system-ui, sans-serif;
   --f-serif: 'Cormorant Garamond', Georgia, serif;
@@ -162,23 +163,9 @@ input:focus-visible {
 
 .note { font-size: 12px; color: var(--muted); }
 
-.logo {
-  font-family: var(--f-script);
-  font-weight: 400;
-  font-size: 40px;
-  color: var(--accent);
-  text-decoration: none;
-  line-height: 1;
-}
-.logo small {
-  display: block;
-  font-family: var(--f-sans);
-  font-size: 9px;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-top: 4px;
-}
+/* Логотип «Mary Mar Cake» — картинка з прозорим фоном (2× для чіткості) */
+.logo { display: inline-flex; align-items: center; flex: none; text-decoration: none; line-height: 0; }
+.logo img { display: block; height: 56px; width: auto; }
 
 /* ---------- Кнопки ---------- */
 .btn {
@@ -241,7 +228,7 @@ input:focus-visible {
 
 /* ---------- 1. Перший екран ---------- */
 .hero {
-  background: linear-gradient(180deg, #F7ECEB 0, var(--tint) 55%, #fff 100%);
+  background: linear-gradient(180deg, #EFECE8 0, var(--tint) 55%, #fff 100%);
   overflow-x: clip;
 }
 
@@ -250,7 +237,7 @@ input:focus-visible {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: #F7ECEB;
+  background: #EFECE8;
   transition: background-color .25s ease, box-shadow .25s ease;
 }
 .topbar.is-stuck {
@@ -271,7 +258,10 @@ html { scroll-padding-top: 96px; }
   padding: 20px 0;
 }
 .nav ul { display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; }
-.nav ul a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; }
+.nav ul a { color: var(--text); text-decoration: none; font-size: 14px; font-weight: 500; white-space: nowrap; }
+/* П'ять пунктів меню: на середніх ширинах щільніше, щоб шапка лишалась в один рядок */
+@media (max-width: 1100px) { .nav ul { gap: 24px; } }
+@media (max-width: 1000px) { .nav { gap: 16px; } .nav ul { gap: 16px; } .nav ul a { font-size: 13px; } .nav .btn { padding: 0 20px; } }
 .nav ul a:hover { color: var(--accent); }
 .nav .btn { white-space: nowrap; }
 .nav { position: relative; }
@@ -340,17 +330,17 @@ html { scroll-padding-top: 96px; }
   width: 100%;
   max-width: 470px;
   margin: 0 auto;
-  aspect-ratio: 1 / 1.16;
+  aspect-ratio: 3 / 4;
   border-radius: 200px 200px 28px 28px;
   overflow: hidden;
-  box-shadow: 0 24px 56px rgba(106, 16, 39, .16);
+  box-shadow: 0 24px 56px rgba(61, 57, 53, .14);
 }
 .hero-photo picture { height: 100%; }
 .hero-photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: 50% 30%;
+  object-position: 50% 40%;
   display: block;
 }
 
@@ -372,7 +362,7 @@ html { scroll-padding-top: 96px; }
 .benefits > div:first-child { border-left: 0; }
 .benefits svg { color: var(--accent); margin-bottom: 8px; }
 .benefits b { display: block; font-size: 14px; font-weight: 600; }
-.benefits span { font-size: 13px; color: var(--muted); }
+
 
 .hero-note { text-align: center; padding-bottom: 28px; }
 
@@ -452,10 +442,10 @@ html { scroll-padding-top: 96px; }
 }
 .product img {
   width: 100%;
-  aspect-ratio: 3 / 2;
+  aspect-ratio: 4 / 3; /* фото вже обрізані 4:3 — шматок торта видно повністю */
   object-fit: cover;
   display: block;
-  background: #f6f1f1;
+  background: #F5F3F1;
 }
 .product-body { padding: 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
 .product h3 {
@@ -613,7 +603,7 @@ html { scroll-padding-top: 96px; }
   .sub-row { flex-direction: column; }
 }
 
-/* ---------- 4. Про авторку + відгуки ---------- */
+/* ---------- 4. Про автора + відгуки ---------- */
 .about {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -631,7 +621,7 @@ html { scroll-padding-top: 96px; }
 .about h2 { margin: 10px 0 20px; }
 .about-text { max-width: 540px; }
 .about-link { margin-top: 16px; }
-.about-link a { font-weight: 600; }
+.about-link a { font-weight: 600; white-space: nowrap; }
 
 .quote {
   margin: 0;
@@ -742,7 +732,7 @@ html { scroll-padding-top: 96px; }
 
 .foot { padding: 40px 0; font-size: 13px; color: var(--muted); }
 .foot-row { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; align-items: center; }
-.foot .logo { font-size: 28px; }
+.foot .logo img { height: 44px; }
 .foot a { font-weight: 600; }
 
 /* ---------- Мобільна версія ---------- */
@@ -788,13 +778,11 @@ html { scroll-padding-top: 96px; }
   .nav { gap: 12px; }
   .nav-actions { gap: 8px; }
   .burger { width: 42px; height: 42px; }
-  .logo { font-size: 34px; }
-  .logo small { white-space: nowrap; }
+  .logo img { height: 36px; }
 }
 
 @media (max-width: 380px) {
-  .logo { font-size: 30px; }
-  .logo small { font-size: 8px; letter-spacing: .14em; }
+  .logo img { height: 30px; }
   .nav .btn { padding: 0 12px; font-size: 12.5px; }
 }
 
@@ -840,6 +828,8 @@ html.modal-open { overflow: hidden; }
 .co-step { padding: 28px 32px 32px; display: flex; flex-direction: column; gap: 18px; }
 .co-step[hidden] { display: none; }
 .co-title { font-size: 32px; padding-right: 40px; }
+/* Заголовок отримує фокус програмно (на телефоні замість поля email) — без рамки */
+.co-title:focus { outline: none; }
 
 .co-item {
   display: grid;
@@ -850,7 +840,7 @@ html.modal-open { overflow: hidden; }
   border: 1px solid var(--line);
   border-radius: 16px;
 }
-.co-item-img { width: 96px; height: 64px; object-fit: cover; border-radius: 10px; display: block; background: #f6f1f1; }
+.co-item-img { width: 72px; height: 72px; object-fit: cover; border-radius: 10px; display: block; background: #F5F3F1; }
 .co-item-img[hidden] { display: none; }
 .co-item.no-img { grid-template-columns: 1fr auto; }
 .co-item-name { font-family: var(--f-sc); font-weight: 600; font-size: 22px; color: var(--accent); line-height: 1.1; }
@@ -960,7 +950,7 @@ html.modal-open { overflow: hidden; }
   .co-step { padding: 20px 20px 28px; }
   .co-title { font-size: 28px; }
   .co-item { grid-template-columns: 72px 1fr; }
-  .co-item-img { width: 72px; height: 52px; }
+  .co-item-img { width: 60px; height: 60px; }
   .co-item-price { grid-column: 2; }
   .co-item.no-img { grid-template-columns: 1fr; }
   .co-item.no-img .co-item-price { grid-column: 1; }
@@ -978,7 +968,7 @@ html.modal-open { overflow: hidden; }
 }
 
 /* ==========================================================================
-   Розмір торта, досвід авторки, підтримка після покупки
+   Розмір торта, досвід автора, підтримка після покупки
    ========================================================================== */
 .catalog-hint { margin-top: 10px; font-size: 14px; color: var(--muted); }
 .sec-head .catalog-hint { margin-top: 10px; }
@@ -1084,115 +1074,169 @@ html.modal-open { overflow: hidden; }
 }
 
 /* ==========================================================================
-   Що всередині: слайдер сторінок техкарти, аудиторія
+   Що всередині: сторінка з техкарти (фото збирання), аудиторія
    ========================================================================== */
-.tc-slider { min-width: 0; }
-/* Стрічка зі слайдами: гортається пальцем (як в Instagram), кожен слайд «доклацується» */
-.tc-track {
-  display: flex;
-  aspect-ratio: 772 / 724;
+/* Сторінка з техкарти (фото покрокового збирання) у вигляді картки-аркуша */
+.tc-page {
+  margin: 0;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid var(--line-2);
   border-radius: 20px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  overscroll-behavior-x: contain;
-  scrollbar-width: none;
-  background: #fff;
-  border: 1px solid var(--line-2);
+  padding: 10px;
+  box-shadow: 0 18px 40px rgba(61, 57, 53, .10);
 }
-.tc-track::-webkit-scrollbar { display: none; }
-/* Під час автоперелистування JS вимикає «доклацування», щоб анімація йшла плавно */
-.tc-track.is-animating { scroll-snap-type: none; }
-.tc-slide {
-  flex: 0 0 100%;
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
-  margin: 0;
-}
-.tc-slide picture, .tc-slide img { width: 100%; height: 100%; }
-.inside .tc-slide img { border-radius: 0; object-fit: cover; }
-
-.tc-ctrl { display: flex; align-items: center; gap: 12px; margin-top: 14px; }
-.tc-pause {
-  flex: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 1px solid var(--line-2);
-  background: #fff;
-  color: var(--accent);
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-  padding: 0;
-}
-.tc-pause:hover { background: var(--tint); }
-.tc-pause .i-play { display: none; }
-.tc-slider.is-paused .tc-pause .i-play { display: block; }
-.tc-slider.is-paused .tc-pause .i-pause { display: none; }
-.tc-dots { display: flex; }
-.tc-dot {
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border: 0;
-  background: none;
-  display: grid;
-  place-items: center;
-  cursor: pointer;
-}
-.tc-dot::before {
-  content: "";
-  width: 8px;
-  height: 8px;
-  border-radius: 4px;
-  background: var(--line-2);
-  transition: width .3s ease, background-color .3s ease;
-}
-.tc-dot[aria-current="true"]::before { width: 22px; background: var(--accent); }
-.tc-cap {
-  margin: 0;
+.inside .tc-page img { border-radius: 12px; }
+.tc-page figcaption {
+  margin-top: 10px;
+  text-align: center;
   font-family: var(--f-serif);
   font-style: italic;
-  font-size: 19px;
-  color: var(--accent);
-  min-width: 0;
+  font-size: 16px;
+  color: var(--muted);
+}
+@media (min-width: 861px) {
+  /* Фото ~ у справжньому розмірі, щоб лишалося чітким; праворуч список і картки аудиторії */
+  .inside { grid-template-columns: minmax(0, 380px) minmax(0, 1fr); align-items: stretch; }
+  /* Права колонка на всю висоту фото: верх і низ урівень з карткою фото.
+     Зайву висоту забирає рожева картка — пункти списку рівномірно розходяться. */
+  .inside-info { display: flex; flex-direction: column; }
+  .get-card { flex: 1; display: flex; flex-direction: column; }
+  .get-card .check--lg { flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
+}
+@media (max-width: 860px) {
+  .tc-page { max-width: 480px; width: 100%; margin: 0 auto; }
 }
 
+/* «Що ви отримаєте після покупки»: ніжно-рожева картка, більший текст, галочки */
+.get-card {
+  background: var(--tint);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 26px 28px;
+}
 .inside-sub {
   margin: 0;
   font-family: var(--f-sc);
   font-weight: 600;
-  font-size: 22px;
+  font-size: 24px;
   color: var(--accent);
   line-height: 1.2;
 }
-.inside-sub + .check { margin-top: 12px; }
+.check--lg { margin-top: 16px; gap: 12px; }
+.check--lg li { font-size: 16px; line-height: 1.5; color: var(--text); gap: 12px; }
+.check--lg li::before {
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 50%;
+  background: var(--accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 12.5l4 4 8-9'/%3E%3C/svg%3E") center / 14px no-repeat;
+}
 
-.aud { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 12px; }
-.aud li {
+/* «Для кого»: три картки з іконками */
+.aud-label { margin: 28px 0 12px; }
+.aud {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 16px;
-  align-items: baseline;
-  padding-top: 12px;
-  border-top: 1px solid var(--line);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.aud li {
+  background: #fff;
+  border: 1px solid var(--line-2);
+  border-radius: 16px;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.aud-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--tint);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  margin-bottom: 4px;
 }
 .aud h3 {
   margin: 0;
   font-family: var(--f-sc);
   font-weight: 600;
-  font-size: 20px;
+  font-size: 21px;
   color: var(--accent);
+  line-height: 1.15;
 }
-.aud p { margin: 0; font-size: 14px; color: var(--body); }
+.aud p { margin: 0; font-size: 14px; line-height: 1.5; color: var(--body); }
 
-@media (max-width: 480px) {
-  .aud li { grid-template-columns: 1fr; gap: 2px; }
-  .tc-cap { font-size: 17px; line-height: 1.2; }
+/* Вузька права колонка або телефон: картки аудиторії одна під одною, іконка ліворуч */
+@media (max-width: 1100px) and (min-width: 861px), (max-width: 600px) {
+  .aud { grid-template-columns: 1fr; }
+  .aud li { display: grid; grid-template-columns: 44px 1fr; column-gap: 14px; row-gap: 2px; align-items: center; }
+  .aud-ico { grid-row: 1 / 3; margin: 0; }
 }
-@media (prefers-reduced-motion: reduce) {
-  .tc-dot::before { transition: none; }
+@media (max-width: 480px) {
+  .get-card { padding: 22px 20px; }
+  .inside-sub { font-size: 22px; }
+}
+
+/* ==========================================================================
+   Фото клієнтів з тортами Марії: сітка на комп'ютері, стрічка-гортання на телефоні
+   ========================================================================== */
+.gallery { margin-top: 56px; }
+.gallery-title {
+  margin: 0 0 18px;
+  font-family: var(--f-sc);
+  font-weight: 600;
+  font-size: 26px;
+  color: var(--accent);
+  line-height: 1.2;
+}
+.gallery-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+}
+.gallery-list li {
+  aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: var(--tint);
+}
+.gallery-list picture, .gallery-list img { display: block; width: 100%; height: 100%; }
+.gallery-list img { object-fit: cover; }
+/* Що лишається в кадрі кожного фото */
+.gallery-list li:nth-child(1) img { object-position: 50% 75%; }
+.gallery-list li:nth-child(2) img { object-position: 50% 50%; }
+.gallery-list li:nth-child(3) img { object-position: 30% 50%; }
+.gallery-list li:nth-child(4) img { object-position: 40% 45%; }
+.gallery-list li:nth-child(5) img { object-position: 50% 55%; }
+
+@media (max-width: 860px) {
+  .gallery { margin-top: 40px; }
+  .reviews { margin-top: 40px; }
+  .gallery-title { font-size: 22px; }
+  /* Стрічка, яку гортають пальцем; крайні фото «визирають», щоб було видно, що можна гортати */
+  .gallery-list {
+    display: flex;
+    gap: 12px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+    margin: 0 -20px;
+    padding: 0 20px 4px;
+    scroll-padding-left: 20px;
+  }
+  .gallery-list::-webkit-scrollbar { display: none; }
+  .gallery-list li { flex: 0 0 68%; scroll-snap-align: start; }
 }
   </style>
 
@@ -1213,7 +1257,7 @@ html.modal-open { overflow: hidden; }
   <meta property="og:image" content="https://shurachuh-dev.github.io/LandingMarryMar/assets/img/og-image.jpg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Марія з техкартою торта. Техкарти тортів від marymar, авторські рецепти в PDF">
+  <meta property="og:image:alt" content="Марія з техкартою торта. Техкарти тортів в PDF: авторські рецепти від Mary Mar">
   <meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
@@ -1222,12 +1266,13 @@ html.modal-open { overflow: hidden; }
 <header class="topbar">
   <div class="wrap">
     <div class="nav">
-      <a class="logo" href="#top" aria-label="Marymar, авторські техкарти">Marymar<small>Авторські техкарти</small></a>
+      <a class="logo" href="#top" aria-label="Mary Mar Cake — на початок сторінки"><picture><source type="image/webp" srcset="assets/img/logo-marymar.webp"><img src="assets/img/logo-marymar.png" alt="Mary Mar Cake" width="233" height="64"></picture></a>
       <nav aria-label="Основна навігація">
         <ul id="main-menu">
           <li><a href="#inside">Що всередині</a></li>
           <li><a href="#smaky">Смаки</a></li>
-          <li><a href="#about">Авторка</a></li>
+          <li><a href="#about">Про автора</a></li>
+          <li><a href="#calc">Калькулятор</a></li>
           <li><a href="#faq">Питання</a></li>
         </ul>
       </nav>
@@ -1244,34 +1289,34 @@ html.modal-open { overflow: hidden; }
   <div class="wrap">
     <div class="hero-grid" id="top">
       <div class="hero-text">
-        <h1 class="disp hero-title">Техкарти тортів від marymar: авторські рецепти в PDF</h1>
-        <p class="hero-sub">Техкарти тортів на кожен смак: для першого замовлення, нового смаку в меню чи родинного свята.</p>
+        <h1 class="disp hero-title">Техкарти тортів в PDF: авторські рецепти від Mary Mar</h1>
+        <p class="hero-sub">Готові техкарти тортів на кожен смак — завжди вдалий результат без зайвих спроб і переробок.</p>
         <div class="hero-actions">
           <a class="btn" href="#smaky">Обрати техкарту</a>
           <a class="btn btn--ghost" href="#calc">Калькулятор</a>
         </div>
       </div>
       <div class="hero-photo">
-        <picture><source type="image/webp" srcset="assets/img/hero-maria-640.webp 640w, assets/img/hero-maria-800.webp 800w, assets/img/hero-maria.webp 1096w" sizes="(max-width: 860px) 380px, 470px"><img src="assets/img/hero-maria.jpg" alt="Марія з техкартою та шматком торта" width="1096" height="1320" fetchpriority="high"></picture>
+        <picture><source type="image/webp" srcset="assets/img/hero-maria-480.webp 480w, assets/img/hero-maria.webp 768w" sizes="(max-width: 860px) 380px, 470px"><img src="assets/img/hero-maria.jpg" alt="Марія з тортом, прикрашеним кремовими трояндами, і телефоном з логотипом Mary Mar Cake" width="768" height="1024" fetchpriority="high"></picture>
       </div>
     </div>
 
     <div class="benefits" role="list" aria-label="Переваги">
       <div role="listitem">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>
-        <b>PDF-формат</b><span>Зручно зберігати та друкувати</span>
+        <b>PDF-формат</b>
       </div>
       <div role="listitem">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 14a4 4 0 1 1 1.5-7.7A4.5 4.5 0 0 1 17 6.5 4 4 0 0 1 17 14v5H7z"/><path d="M7 16.5h10"/></svg>
-        <b>Авторські рецепти</b><span>Від кондитера Марії</span>
+        <b>Авторські рецепти</b>
       </div>
       <div role="listitem">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h9"/><path d="m17 17 1.5 1.5L21 15.5"/></svg>
-        <b>Точні грами й кроки</b><span>Послідовні етапи приготування й збирання</span>
+        <b>Точні грами й кроки</b>
       </div>
       <div role="listitem">
         <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.6 4.2 2.8 6.4 7 7-4.2.6-6.4 2.8-7 7-.6-4.2-2.8-6.4-7-7 4.2-.6 6.4-2.8 7-7z"/></svg>
-        <b>Для будь-якого рівня</b><span>Від першого торта до професійного меню</span>
+        <b>Для будь-якого рівня</b>
       </div>
     </div>
     <p class="note hero-note">Це цифрові рецепти у форматі PDF, а не замовлення готових тортів.</p>
@@ -1287,35 +1332,27 @@ html.modal-open { overflow: hidden; }
       <h2 class="disp sec-title-lg">Техкарта — рецепт до грама</h2>
     </div>
     <div class="inside">
-      <div class="tc-slider" role="region" aria-roledescription="карусель" aria-label="Сторінки техкарти">
-        <div class="tc-track">
-          <div class="tc-slide is-active" role="group" aria-roledescription="слайд" aria-label="1 з 3: Приготування коржів"><picture><source type="image/webp" srcset="assets/img/inside-step2-480.webp 480w, assets/img/inside-step2.webp 772w, assets/img/inside-step2-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step2.jpg" alt="Рецепт торта у техкарті: випікання шоколадного бісквіта і розрізання на 3 коржі" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-          <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="2 з 3: Як замішати крем"><picture><source type="image/webp" srcset="assets/img/inside-step3-480.webp 480w, assets/img/inside-step3.webp 772w, assets/img/inside-step3-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step3.jpg" alt="Рецепт торта у техкарті: як замішати кремчіз і до якого стану збивати" width="772" height="724" loading="lazy" decoding="async"></picture></div>
-          <div class="tc-slide" role="group" aria-roledescription="слайд" aria-label="3 з 3: Порядок збирання"><picture><source type="image/webp" srcset="assets/img/inside-step4-480.webp 480w, assets/img/inside-step4.webp 772w, assets/img/inside-step4-1100.webp 1100w" sizes="(max-width: 860px) calc(100vw - 40px), 540px"><img src="assets/img/inside-step4.jpg" alt="Рецепт торта у техкарті: схема і порядок збирання шарів" width="772" height="724" loading="lazy" decoding="async"></picture></div>
+      <figure class="tc-page">
+        <picture><source type="image/webp" srcset="assets/img/inside-assembly.webp"><img src="assets/img/inside-assembly.jpg" alt="Сторінка техкарти: покрокове збирання торта — просочення, бортик і центр, другий шар, фіксація форми, ацетатна плівка, кільце і холод" width="704" height="1218" loading="lazy" decoding="async"></picture>
+        <figcaption>Сторінка з техкарти: покрокове збирання торта</figcaption>
+      </figure>
+      <div class="inside-info">
+        <div class="get-card">
+          <h3 class="inside-sub">Що ви отримаєте після покупки</h3>
+          <ul class="check check--lg">
+            <li>Точні грамовки для кожного шару</li>
+            <li>Технологію приготування з детальним описом кожного етапу</li>
+            <li>Список рекомендованих інгредієнтів</li>
+            <li>Список необхідного інвентарю</li>
+            <li>Покрокові фото збирання торта</li>
+            <li>PDF на ваш email одразу після оплати</li>
+          </ul>
         </div>
-        <div class="tc-ctrl">
-          <button class="tc-pause" type="button" aria-label="Зупинити показ"><svg class="i-pause" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/></svg><svg class="i-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13a1 1 0 0 0 1.5.86l10.5-6.5a1 1 0 0 0 0-1.72L9.5 4.64A1 1 0 0 0 8 5.5z"/></svg></button>
-          <div class="tc-dots">
-            <button class="tc-dot" type="button" aria-label="Слайд 1: Приготування коржів" aria-current="true"></button>
-            <button class="tc-dot" type="button" aria-label="Слайд 2: Як замішати крем" aria-current="false"></button>
-            <button class="tc-dot" type="button" aria-label="Слайд 3: Порядок збирання" aria-current="false"></button>
-          </div>
-          <p class="tc-cap" aria-hidden="true">Приготування коржів</p>
-        </div>
-      </div>
-      <div>
-        <h3 class="inside-sub">Що ви отримаєте після покупки</h3>
-        <ul class="check">
-          <li>Склад і грами для кожного шару</li>
-          <li>Покрокове приготування коржів, крему й начинки</li>
-          <li>Температури й час випікання та охолодження</li>
-          <li>Схему збирання торта шар за шаром</li>
-          <li>PDF на ваш email одразу після оплати</li>
-        </ul>
-        <ul class="aud" aria-label="Для кого техкарти">
-          <li><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок з першого разу.</p></li>
-          <li><h3>Любителям</h3><p>Святковий торт удома без пошуку й перевірки рецептів.</p></li>
-          <li><h3>Професіоналам</h3><p>Перевірений смак для меню без довгих тестувань.</p></li>
+        <p class="eyebrow aud-label" id="aud-title">Для кого</p>
+        <ul class="aud" aria-labelledby="aud-title">
+          <li><span class="aud-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c1.8 1.4 3.8 2 6 2s4.2-.6 6-2v-5"/><path d="M22 9v5"/></svg></span><h3>Початківцям</h3><p>Зрозумілі кроки й точні грами: менше помилок з першого разу.</p></li>
+          <li><span class="aud-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/><path d="M10 20v-5h4v5"/></svg></span><h3>Любителям</h3><p>Святковий торт удома без пошуку й перевірки рецептів.</p></li>
+          <li><span class="aud-ico" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17h10v4H7z"/><path d="M7 17v-4.2A4 4 0 0 1 6.5 5.2 4 4 0 0 1 12 3.6a4 4 0 0 1 5.5 1.6A4 4 0 0 1 17 12.8V17"/></svg></span><h3>Професіоналам</h3><p>Перевірений смак для меню без довгих тестувань.</p></li>
         </ul>
       </div>
     </div>
@@ -1334,7 +1371,7 @@ html.modal-open { overflow: hidden; }
     <div class="grid3">
       <article class="product">
         <span class="badge-hit">Хіт</span>
-        <picture><source type="image/webp" srcset="assets/img/cake-vyshnia-shokolad-480.webp 480w, assets/img/cake-vyshnia-shokolad.webp 926w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-vyshnia-shokolad.jpg" alt="Розріз торта Вишня-шоколад" width="926" height="586" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-vyshnia-shokolad-480.webp 480w, assets/img/cake-vyshnia-shokolad.webp 646w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-vyshnia-shokolad.jpg" alt="Розріз торта Вишня-шоколад" width="646" height="485" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Вишня-шоколад</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~2,2 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>14–16 порцій</span></li></ul>
@@ -1344,7 +1381,7 @@ html.modal-open { overflow: hidden; }
       </article>
       <article class="product">
         <span class="badge-hit">Хіт</span>
-        <picture><source type="image/webp" srcset="assets/img/cake-fistashka-malyna-480.webp 480w, assets/img/cake-fistashka-malyna.webp 966w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-fistashka-malyna.jpg" alt="Розріз торта Фісташка-малина" width="966" height="536" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-fistashka-malyna-480.webp 480w, assets/img/cake-fistashka-malyna.webp 624w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-fistashka-malyna.jpg" alt="Розріз торта Фісташка-малина" width="624" height="468" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Фісташка-малина</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~2 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>12–14 порцій</span></li></ul>
@@ -1353,7 +1390,7 @@ html.modal-open { overflow: hidden; }
         </div>
       </article>
       <article class="product">
-        <picture><source type="image/webp" srcset="assets/img/cake-kava-glyase-480.webp 480w, assets/img/cake-kava-glyase.webp 950w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-kava-glyase.jpg" alt="Розріз торта Кава гляссе" width="950" height="584" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-kava-glyase-480.webp 480w, assets/img/cake-kava-glyase.webp 643w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-kava-glyase.jpg" alt="Розріз торта Кава гляссе" width="643" height="482" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Кава гляссе</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~2,2 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>14–16 порцій</span></li></ul>
@@ -1362,7 +1399,7 @@ html.modal-open { overflow: hidden; }
         </div>
       </article>
       <article class="product">
-        <picture><source type="image/webp" srcset="assets/img/cake-chornychnyi-480.webp 480w, assets/img/cake-chornychnyi.webp 960w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-chornychnyi.jpg" alt="Розріз торта Чорничний" width="960" height="652" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-chornychnyi-480.webp 480w, assets/img/cake-chornychnyi.webp 681w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-chornychnyi.jpg" alt="Розріз торта Чорничний" width="681" height="511" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Чорничний</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~2,2 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>14–16 порцій</span></li></ul>
@@ -1371,7 +1408,7 @@ html.modal-open { overflow: hidden; }
         </div>
       </article>
       <article class="product">
-        <picture><source type="image/webp" srcset="assets/img/cake-lymonnyi-480.webp 480w, assets/img/cake-lymonnyi.webp 970w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-lymonnyi.jpg" alt="Розріз торта Лимонний" width="970" height="594" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-lymonnyi-480.webp 480w, assets/img/cake-lymonnyi.webp 720w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-lymonnyi.jpg" alt="Розріз торта Лимонний" width="720" height="540" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Лимонний</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~1,8 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>12 порцій</span></li></ul>
@@ -1380,7 +1417,7 @@ html.modal-open { overflow: hidden; }
         </div>
       </article>
       <article class="product">
-        <picture><source type="image/webp" srcset="assets/img/cake-funduchnyi-tropik-480.webp 480w, assets/img/cake-funduchnyi-tropik.webp 932w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-funduchnyi-tropik.jpg" alt="Розріз торта Фундучний тропік" width="932" height="660" loading="lazy" decoding="async"></picture>
+        <picture><source type="image/webp" srcset="assets/img/cake-funduchnyi-tropik-480.webp 480w, assets/img/cake-funduchnyi-tropik.webp 720w" sizes="(max-width: 860px) calc(100vw - 40px), 360px"><img src="assets/img/cake-funduchnyi-tropik.jpg" alt="Розріз торта Фундучний тропік" width="720" height="540" loading="lazy" decoding="async"></picture>
         <div class="product-body">
           <h3>Фундучний тропік</h3>
           <ul class="cake-meta" aria-label="Розмір торта"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 18.4 18.4 5.6"/></svg><span>Ø 18 см</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7a3 3 0 1 1 6 0"/><path d="M6.5 7h11l2.5 13H4z"/></svg><span>~2 кг</span></li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18 12 5l9 13z"/><path d="M5.5 14.3h13"/></svg><span>12–14 порцій</span></li></ul>
@@ -1406,8 +1443,8 @@ html.modal-open { overflow: hidden; }
         <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8.5 8.5 0 0 1-12.4 7.6L3 21l1.4-5.2A8.5 8.5 0 1 1 21 12z"/><path d="M8.5 10.5h7M8.5 14h4.5"/></svg>
       </div>
       <div class="support-text">
-        <h3 class="support-title">14 днів підтримки після покупки</h3>
-        <p>Не виходить шар чи щось незрозуміло в рецепті? Пишіть Марії в Direct — вона відповість на питання за техкартою й підкаже, що виправити.</p>
+        <h3 class="support-title">14 днів підтримки після покупки техкарти</h3>
+        <p>Не вийшло з чимось розібратися або зробили помилку, але не впевнені, де саме? Напишіть мені в Direct в Instagram — я допоможу розібратися з вашою проблемою.</p>
       </div>
       <a class="btn btn--ghost support-btn" href="https://www.instagram.com/marymar.cake/">Написати в Direct</a>
     </div>
@@ -1415,8 +1452,8 @@ html.modal-open { overflow: hidden; }
     <!-- Підписка на новинки (демо). Як підключити справжній сервіс — див. js/main.js, функція initSubscribe -->
     <div class="subscribe" id="subscribe">
       <form class="sub-form" novalidate>
-        <h3 class="sub-title">Дізнавайтеся першими про нові техкарти</h3>
-        <p class="sub-text">Нові смаки тортів, а також капкейки, паски, цукерки та інші десерти — розповімо першими.</p>
+        <h3 class="sub-title">Дізнавайтеся першими про нові рецепти</h3>
+        <p class="sub-text">Нові смаки тортів, а також капкейки, паски, цукерки та інші десерти — дізнавайтеся першими.</p>
         <div class="sub-row">
           <label class="sr-only" for="sub-email">Ваш email</label>
           <input id="sub-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="Ваш email" required aria-describedby="sub-email-err">
@@ -1432,27 +1469,39 @@ html.modal-open { overflow: hidden; }
       <div class="sub-done" hidden tabindex="-1">
         <div class="co-check" aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
         <p class="sub-title">Дякуємо, ви в списку!</p>
-        <p class="sub-text">Напишемо, щойно з'являться нові техкарти.</p>
+        <p class="sub-text">Напишемо, щойно з'являться нові рецепти.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ===== 4. Про авторку + відгуки ===== -->
+<!-- ===== 4. Про автора + відгуки ===== -->
 <section class="sec" id="about">
   <div class="wrap">
     <div class="about">
-      <picture><source type="image/webp" srcset="assets/img/about-maria-480.webp 480w, assets/img/about-maria.webp 804w" sizes="(max-width: 860px) calc(100vw - 40px), 460px"><img src="assets/img/about-maria.jpg" alt="Марія, кондитер із Дніпра" width="804" height="886" loading="lazy" decoding="async"></picture>
+      <picture><source type="image/webp" srcset="assets/img/about-maria-480.webp 480w, assets/img/about-maria.webp 724w" sizes="(max-width: 860px) calc(100vw - 40px), 460px"><img src="assets/img/about-maria.jpg" alt="Марія з весільним тортом власної роботи, оздобленим українською вишивкою" width="724" height="905" loading="lazy" decoding="async"></picture>
       <div>
-        <p class="eyebrow">Авторка та відгуки</p>
+        <p class="eyebrow">Про автора</p>
         <h2 class="disp sec-title-lg">Рецепти, за якими стоїть досвід Марії</h2>
-        <p class="about-text">Марія — кондитер із Дніпра, авторка marymar. Вона створювала торти на замовлення: весільні, святкові, подарункові. Коли підписники в Instagram почали просити навчити їх, з'явилася ідея передати досвід у техкартах: з точними грамами й тим самим підходом, що стоїть за її тортами.</p>
+        <p class="about-text">Мене звати Марія, я кондитер із Дніпра. Я створюю торти на замовлення. Коли підписники в Instagram почали просити навчити їх, я вирішила передати свій досвід у техкартах: з точними грамами й тим самим підходом, що стоїть за кожним моїм тортом.</p>
         <ul class="about-stats">
           <li><b>5 років</b><span>досвіду в кондитерській справі</span></li>
-          <li><b>100+</b><span>виконаних замовлень</span></li>
+          <li><b>250+</b><span>виконаних замовлень</span></li>
         </ul>
-        <p class="about-link"><a href="https://www.instagram.com/marymar.cake/">Instagram @marymar.cake →</a></p>
+        <p class="about-link">Для ближчого ознайомлення з моєю роботою — <a href="https://www.instagram.com/marymar.cake/">Instagram @marymar.cake →</a></p>
       </div>
+    </div>
+
+    <!-- Фото клієнтів з тортами Марії (публікація погоджена) -->
+    <div class="gallery">
+      <h3 class="gallery-title">Торти Марії на святах клієнтів</h3>
+      <ul class="gallery-list">
+        <li><picture><source type="image/webp" srcset="assets/img/client-1.webp"><img src="assets/img/client-1.jpg" alt="Святковий торт з пастельними квітами та свічками" width="600" height="900" loading="lazy" decoding="async"></picture></li>
+        <li><picture><source type="image/webp" srcset="assets/img/client-2.webp"><img src="assets/img/client-2.jpg" alt="Весільний торт на святі з феєрверками" width="1000" height="666" loading="lazy" decoding="async"></picture></li>
+        <li><picture><source type="image/webp" srcset="assets/img/client-3.webp"><img src="assets/img/client-3.jpg" alt="Наречені ріжуть прямокутний весільний торт" width="600" height="677" loading="lazy" decoding="async"></picture></li>
+        <li><picture><source type="image/webp" srcset="assets/img/client-4.webp"><img src="assets/img/client-4.jpg" alt="Весільний торт з бантами на святі просто неба" width="600" height="900" loading="lazy" decoding="async"></picture></li>
+        <li><picture><source type="image/webp" srcset="assets/img/client-5.webp"><img src="assets/img/client-5.jpg" alt="Два торти у прозорих святкових коробках" width="600" height="1067" loading="lazy" decoding="async"></picture></li>
+      </ul>
     </div>
 
     <ul class="reviews" aria-label="Відгуки клієнтів">
@@ -1537,7 +1586,7 @@ html.modal-open { overflow: hidden; }
 
 <footer class="foot">
   <div class="wrap foot-row">
-    <span class="logo">Marymar</span>
+    <span class="logo"><picture><source type="image/webp" srcset="assets/img/logo-marymar.webp"><img src="assets/img/logo-marymar.png" alt="Mary Mar Cake" width="233" height="64" loading="lazy" decoding="async"></picture></span>
     <a href="https://www.instagram.com/marymar.cake/">@marymar.cake</a>
     <span>© marymar · авторські техкарти</span>
   </div>
@@ -1551,7 +1600,7 @@ html.modal-open { overflow: hidden; }
     <h2 class="co-title disp" id="co-title">Оформлення замовлення</h2>
 
     <div class="co-item">
-      <img class="co-item-img" src="" alt="" width="96" height="64">
+      <img class="co-item-img" src="" alt="" width="72" height="72">
       <div>
         <p class="co-item-name"></p>
         <p class="co-item-desc"></p>
